@@ -1,0 +1,228 @@
+{
+  "name": "goaazrwts001",
+  "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Compute/virtualMachines/goaazrwts001",
+  "type": "Microsoft.Compute/virtualMachines",
+  "location": "westeurope",
+  "tags": {
+      "Application_Service": "Platform Operations Management - Azure PROD",
+      "Application_ID": "701596",
+      "Desired_MS_VM_SLA": "99.9",
+      "Ticket_Number": "SCTASK0126795",
+      "Custom": "AVM - All Servers",
+      "Charge_Code": "2440204063",
+      "Deployment_Date": "2/18/2017  2:36:51 AM UTC",
+      "Environment": "PROD",
+      "Managed_Group": "INFRA Support - ITSG Azure",
+      "Business_Service": "Cloud Central - ITS Global POC",
+      "Application_Name": "One Platform Management Tools",
+      "Requester_Name": "Subrata Ghosh",
+      "Managed": "YES",
+      "Approver_Name": "Richard Scholten",
+      "Managed_By": "Jacques Bron"
+  },
+  "properties": {
+      "hardwareProfile": {
+          "vmSize": "Standard_D8_v3"
+      },
+      "provisioningState": "Succeeded",
+      "vmId": "c0393175-e7e9-4f42-b5c6-1d5cd69fabea",
+      "storageProfile": {
+          "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest",
+              "exactVersion": "4.0.20170111"
+          },
+          "osDisk": {
+              "osType": "Windows",
+              "name": "goaazrwts001-osdisk-20220921-110908",
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "writeAcceleratorEnabled": false,
+              "managedDisk": {
+                  "storageAccountType": "Standard_LRS",
+                  "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-osdisk-20220921-110908"
+              },
+              "diskSizeGB": 127
+          },
+          "dataDisks": [
+              {
+                  "lun": 1,
+                  "name": "goaazrwts001-E-LoggingDisk.vhd_4c66f94c88174524bdaf3b00dc7c345c",
+                  "createOption": "Empty",
+                  "caching": "ReadWrite",
+                  "writeAcceleratorEnabled": false,
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS",
+                      "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-E-LoggingDisk.vhd_4c66f94c88174524bdaf3b00dc7c345c"
+                  },
+                  "diskSizeGB": 2048,
+                  "toBeDetached": false
+              },
+              {
+                  "lun": 2,
+                  "name": "goaazrwts001-F-DataDisk.vhd_99b616ea3c554383a5448c4b3d5a22f4",
+                  "createOption": "Empty",
+                  "caching": "ReadWrite",
+                  "writeAcceleratorEnabled": false,
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS",
+                      "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-F-DataDisk.vhd_99b616ea3c554383a5448c4b3d5a22f4"
+                  },
+                  "diskSizeGB": 1024,
+                  "toBeDetached": false
+              },
+              {
+                  "lun": 3,
+                  "name": "goaazrwts001-G-ApplicationDisk.vhd_1f1e57e2d2e64be8bf242b1c368667d6",
+                  "createOption": "Empty",
+                  "caching": "ReadWrite",
+                  "writeAcceleratorEnabled": false,
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS",
+                      "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-G-ApplicationDisk.vhd_1f1e57e2d2e64be8bf242b1c368667d6"
+                  },
+                  "diskSizeGB": 1024,
+                  "toBeDetached": false
+              },
+              {
+                  "lun": 4,
+                  "name": "goaazrwts001-H-DataDisk.vhd_85f57667849e4cf0b6cc16877d4db315",
+                  "createOption": "Empty",
+                  "caching": "ReadWrite",
+                  "writeAcceleratorEnabled": false,
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS",
+                      "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-H-DataDisk.vhd_85f57667849e4cf0b6cc16877d4db315"
+                  },
+                  "diskSizeGB": 1024,
+                  "toBeDetached": false
+              },
+              {
+                  "lun": 5,
+                  "name": "goaazrwts001-I-DataDisk_1bff34d99cd348ce87d37bb960679910",
+                  "createOption": "Empty",
+                  "caching": "ReadWrite",
+                  "writeAcceleratorEnabled": false,
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS",
+                      "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/KPMGGO_PRD_SQLPAAS/providers/Microsoft.Compute/disks/goaazrwts001-I-DataDisk_1bff34d99cd348ce87d37bb960679910"
+                  },
+                  "diskSizeGB": 2048,
+                  "toBeDetached": false
+              }
+          ]
+      },
+      "osProfile": {
+          "computerName": "goaazrwts001",
+          "adminUsername": "k1_goaazrwts001",
+          "windowsConfiguration": {
+              "provisionVMAgent": true,
+              "enableAutomaticUpdates": true,
+              "patchSettings": {
+                  "patchMode": "AutomaticByOS",
+                  "assessmentMode": "ImageDefault"
+              },
+              "timeZone": "Pacific Standard Time"
+          },
+          "secrets": []
+      },
+      "networkProfile": {
+          "networkInterfaces": [
+              {
+                  "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Network/networkInterfaces/nic_goaazrwts001"
+              }
+          ]
+      },
+      "diagnosticsProfile": {
+          "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "https://kpmggosasqlpaas.blob.core.windows.net/"
+          }
+      },
+      "licenseType": "Windows_Server"
+  },
+  "resources": [
+      {
+          "name": "AzureNetworkWatcherExtension",
+          "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Compute/virtualMachines/goaazrwts001/extensions/AzureNetworkWatcherExtension",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "westeurope",
+          "tags": {
+              "Charge_Code": "2440204063",
+              "Environment": "PROD"
+          },
+          "properties": {
+              "autoUpgradeMinorVersion": true,
+              "provisioningState": "Succeeded",
+              "publisher": "Microsoft.Azure.NetworkWatcher",
+              "type": "NetworkWatcherAgentWindows",
+              "typeHandlerVersion": "1.4",
+              "settings": {}
+          }
+      },
+      {
+          "name": "enablevmaccess",
+          "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Compute/virtualMachines/goaazrwts001/extensions/enablevmaccess",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "westeurope",
+          "tags": {
+              "Charge_Code": "2440204063",
+              "Environment": "PROD"
+          },
+          "properties": {
+              "autoUpgradeMinorVersion": true,
+              "provisioningState": "Succeeded",
+              "publisher": "Microsoft.Compute",
+              "type": "VMAccessAgent",
+              "typeHandlerVersion": "2.0",
+              "settings": {
+                  "UserName": "k1_goaazrwts001"
+              }
+          }
+      },
+      {
+          "name": "MicrosoftMonitoringAgent",
+          "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Compute/virtualMachines/goaazrwts001/extensions/MicrosoftMonitoringAgent",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "westeurope",
+          "tags": {
+              "Charge_Code": "2440204063",
+              "Environment": "PROD"
+          },
+          "properties": {
+              "autoUpgradeMinorVersion": true,
+              "provisioningState": "Succeeded",
+              "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+              "type": "MicrosoftMonitoringAgent",
+              "typeHandlerVersion": "1.0",
+              "settings": {
+                  "workspaceId": "887351e7-804b-4e77-876b-7e218dea29ce"
+              }
+          }
+      },
+      {
+          "name": "SqlIaasExtension",
+          "id": "/subscriptions/7cfbdf7e-720b-4ac7-a669-2a4a4ddad0a4/resourceGroups/kpmggo_prd_sqlpaas/providers/Microsoft.Compute/virtualMachines/goaazrwts001/extensions/SqlIaasExtension",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "location": "westeurope",
+          "properties": {
+              "autoUpgradeMinorVersion": true,
+              "provisioningState": "Succeeded",
+              "enableAutomaticUpgrade": false,
+              "publisher": "Microsoft.SqlServer.Management",
+              "type": "SqlIaaSAgent",
+              "typeHandlerVersion": "2.0",
+              "settings": {
+                  "SqlManagement": {
+                      "IsEnabled": false
+                  },
+                  "DeploymentTokenSettings": {
+                      "DeploymentToken": 1080132962
+                  }
+              }
+          }
+      }
+  ]
+}

@@ -1,0 +1,298 @@
+################################################################################
+
+Kusto Query Language
+
+################################################################################
+
+
+//////////////////////////////////////////////////////////////////
+
+AddonAzureBackupJobs
+AddonAzureBackupPolicy 
+
+//////////////////////////////////////////////////////////////////
+
+
+
+---
+resources
+| where type == "microsoft.compute/virtualmachines"  
+  and properties.storageProfile.imageReference.offer == "WindowsServer"
+| project name,offer=properties.storageProfile.imageReference.offer,sku=properties.storageProfile.imageReference.sku,version=properties.storageProfile.imageReference.version,minorversion=properties.storageProfile.imageReference.exactVersion
+---
+
+---
+resources
+| where type == "microsoft.compute/virtualmachines"
+  and properties.storageProfile.imageReference.offer == "WindowsServer"
+  and properties.storageProfile.imageReference.sku == "2012-R2-Datacenter"
+| project name, offer=properties.storageProfile.imageReference.offer, sku=properties.storageProfile.imageReference.sku, version=properties.storageProfile.imageReference.version, minorversion=properties.storageProfile.imageReference.exactVersion
+---
+
+---
+resources
+| where type == "microsoft.compute/virtualmachines"
+  and properties.storageProfile.imageReference.offer == "WindowsServer"
+  and properties.storageProfile.imageReference.sku == "2012-R2-Datacenter"
+| project name, offer=properties.storageProfile.imageReference.offer, sku=properties.storageProfile.imageReference.sku, version=properties.storageProfile.imageReference.version
+---
+
+---
+## Contains SKU 2012
+resources
+| where type == "microsoft.compute/virtualmachines"
+  and properties.storageProfile.imageReference.offer == "WindowsServer"
+  and properties.storageProfile.imageReference.sku contains "2012"
+| project name, offer=properties.storageProfile.imageReference.offer, sku=properties.storageProfile.imageReference.sku, version=properties.storageProfile.imageReference.version, minorversion=properties.storageProfile.imageReference.exactVersion
+---
+
+---
+Event
+| where Computer contains "GOAAZRDB485" or Computer contains "OAAZRDB782"
+| where EventLevelName contains "Error"
+---
+
+---
+recoveryservicesresources
+| where type in~ ('microsoft.recoveryservices/vaults/replicationfabrics/replicationprotectioncontainers/replicationprotecteditems')
+| extend RSV = split(id,'/')[8]
+| extend details= split (properties.providerSpecificDetails.protectedManagedDisks[0].primaryStagingAzureStorageAccountId,'/storageaccounts/')[1]
+| extend details2 = properties.providerSpecificDetails.RecoveryAzureLogStorageAccountId
+| extend details3= split (properties.providerSpecificDetails.protectedDisks[0].logStorageAccountId,'/storageaccounts/')[1]
+| project subscriptionId,resourceGroup,RSV,['details'],details2,details3
+---
+
+---
+let backupType = "IaaSVM";
+let subscriptionId = "edd128c7-1cec-49b0-9996-2a4c90f6a905";
+AddonAzureBackupJobs
+| where _SubscriptionId == subscriptionId
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+| where JobStatus has_any("Completed", "Failed", "CompletedWithWarnings")
+| extend vmName = (tostring(split(split(BackupItemUniqueId, ';')[4], ';')[0]))
+| extend Subscription = _SubscriptionId
+| project
+    vmName,
+    JobStartDateTime,
+    JobStatus,
+    JobFailureCode,
+    JobDurationInSecs,
+    JobOperation,
+    BackupManagementType,
+    Subscription
+| sort by vmName asc
+---
+
+---
+let backupType = "IaaSVM";
+AddonAzureBackupJobs
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+| where JobStatus has_any("Completed")
+| extend vmName = (tostring(split(split(BackupItemUniqueId, ';')[4], ';')[0]))
+| project
+    JobStartDateTime,
+    vmName,
+    JobStatus,
+    JobFailureCode,
+    JobDurationInSecs,
+    JobOperation,
+    BackupItemFriendlyName,
+    BackupItemId,
+    BackupManagementType
+| distinct vmName
+| sort by vmName asc 
+---
+
+---
+//let backupType = "MAB";
+AddonAzureBackupJobs
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+//| where BackupManagementType == backupType
+| where JobStatus has_any("Completed")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| distinct BackupManagementType
+---
+
+---
+let backupType = "MAB";
+AddonAzureBackupJobs
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+//| where JobStatus has_any("Failed", "CompletedWithWarnings")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation,BackupManagementType, machineBackup;
+---
+
+---
+//let backupType = "MAB";
+let backupType = "IaaSVM";
+AddonAzureBackupJobs
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+| where JobStatus has_any("Completed")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation, BackupManagementType, machineBackup
+---
+
+---
+let machineBackup = "";
+let backupType = "MAB";
+let FailedJobs1DayAgo = AddonAzureBackupJobs
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+| where JobStatus has_any("Failed", "CompletedWithWarnings")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation,BackupManagementType, machineBackup;
+let FailedJobs2DaysAgo = AddonAzureBackupJobs
+| where TimeGenerated >= ago(2d) and TimeGenerated <= ago(1d)
+| where BackupManagementType == backupType
+| where JobStatus has_any("Failed", "CompletedWithWarnings")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation,BackupManagementType, machineBackup;
+let FailedJobs3DaysAgo = AddonAzureBackupJobs
+| where TimeGenerated >= ago(3d) and TimeGenerated <= ago(2d)
+| where BackupManagementType == backupType
+| where JobStatus has_any("Failed", "CompletedWithWarnings")
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation,BackupManagementType, machineBackup;
+FailedJobs1DayAgo | join(FailedJobs2DaysAgo) on machineBackup
+| join(FailedJobs3DaysAgo)on machineBackup
+| distinct machineBackup
+---
+
+---
+let machineBackup = "";
+let backupType = "MAB";
+AddonAzureBackupJobs 
+| where TimeGenerated >= ago(1d) and TimeGenerated <= now()
+| where BackupManagementType == backupType
+| extend machineBackup = (tostring(split(split(BackupItemUniqueId, ';')[2],';')[0]))
+//| project JobStartDateTime, JobStatus,JobDurationInSecs, JobFailureCode, JobOperation,BackupManagementType, machineBackup
+---
+resources
+| where type == "microsoft.network/publicipaddresses"
+//| take 10
+| project name, properties.ipAddress, resourceGroup, location
+
+--
+resources
+| where type == "microsoft.cache/redisenterprise"
+| take 10 
+
+
+resources
+| where type == "microsoft.cache/redis"
+| project name, properties.hostName
+//| take 10
+
+
+resources
+| where type == "microsoft.cache/redis"
+//| take 10
+| project name, properties.hostName, properties.staticIP, properties.publicNetworkAccess, properties.disableAccessKeyAuthentication
+
+---
+
+>> NSG rules
+Resources
+| where type =~ 'Microsoft.Network/networkSecurityGroups'
+| mv-expand rules=properties.securityRules
+| mv-expand subnet=properties.subnets
+| where subnet.id contains 'GOAZRVNETDEV11500/subnets/GOSNBEI11510'
+| project 
+    NSGName = name,
+    VNetName = split(subnet.id, '/')[8],
+    SubnetName = split(subnet.id, '/')[-1],
+    RuleName = tostring(rules.name),
+    Description = tostring(rules.properties.description),
+    Priority = toint(rules.properties.priority),
+    Direction = tostring(rules.properties.direction),
+    Access = tostring(rules.properties.access),
+    SourceAddressPrefix = tostring(rules.properties.sourceAddressPrefix),
+    SourcePortRange = tostring(rules.properties.sourcePortRange),
+    DestinationAddressPrefix = tostring(rules.properties.destinationAddressPrefix),
+    DestinationPortRange = tostring(rules.properties.destinationPortRange),
+    Protocol = tostring(rules.properties.protocol)
+| order by NSGName, Priority asc
+
+---
+
+Resources
+| where type =~ 'microsoft.network/virtualnetworks'
+| where name =~ "GOAZRVNETDEV11500"
+| mv-expand subnets = properties.subnets
+| project vnetName = name, 
+          subnetName = subnets.name, 
+          subnetCIDR = subnets.properties.addressPrefix,
+          nsgId = subnets.properties.networkSecurityGroup.id,
+          routeTableId = subnets.properties.routeTable.id
+| extend nsgName = split(nsgId, '/')[-1],
+         routeTableName = split(routeTableId, '/')[-1]
+| project vnetName, subnetName, subnetCIDR, nsgName, routeTableName
+
+---
+
+Following are the KQL Queries for extracting the ASE from KPMG tenant.
+KQL Query 1
+
+resources      
+| where type == "microsoft.web/hostingenvironments"
+| order by ['kind'] asc
+
+---
+## FunctionWarningsAndErrors-alert
+
+FunctionAppLogs
+| where Level == "Warning" or Level == "Error"
+| project TimeGenerated, HostInstanceId, Level, Message, _ResourceId
+| sort by TimeGenerated desc
+
+FunctionAppLogs
+| where Level == "Warning" or Level == "Error"
+| project
+    TimeGenerated,
+    FunctionName,
+    AppName,
+    HostInstanceId,
+    Level,
+    Message,
+    _ResourceId
+| sort by TimeGenerated desc
+
+FunctionAppLogs
+| where Level == "Warning" or Level == "Error"
+| where TimeGenerated between (datetime(2024-6-2) .. datetime(2024-6-4) )
+| project
+    TimeGenerated,
+    FunctionName,
+    AppName,
+    HostInstanceId,
+    Level,
+    Message,
+    _ResourceId
+| sort by TimeGenerated desc
+
+---
+
+resources
+| where type =~ 'microsoft.compute/virtualmachines'
+| where subscriptionId =~ '3b5b2af8-7f07-4eea-b01c-cd2672a3fb5b'
+//| where | where subscriptionId =~ 'GO-M-DEV-CE OpsGPT'
+| where resourceGroup =~ 'GO-RG-M-DEV-EUS-OpsGPT'
+| extend vmName = tostring(properties.osProfile.computerName)
+| join kind=leftouter (
+    resources
+    | where type =~ 'microsoft.compute/virtualmachines/extensions'
+    | where name =~ 'HealthExtension'
+    | extend vmId = extract("(.+)/extensions/.+", 1, id)
+    | project vmId, healthStatus = properties.instanceView.status.message
+) on $left.id == $right.vmId
+| project vmName, resourceGroup, subscriptionId, location, healthStatus
+| order by vmName asc
+
+
+---
+
+
